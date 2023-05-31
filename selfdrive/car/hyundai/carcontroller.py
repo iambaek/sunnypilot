@@ -140,15 +140,19 @@ class CarController:
       # disable LFA on HDA2
       if self.frame % 5 == 0 and hda2:
         can_sends.append(hyundaicanfd.create_cam_0x2a4(self.packer, self.CAN, CS.cam_0x2a4))
+        print('---- carcontroller.py // disable LFA on HDA2 -----')
+
 
       # LFA and HDA icons
       if self.frame % 5 == 0 and (not hda2 or hda2_long):
         can_sends.append(hyundaicanfd.create_lfahda_cluster(self.packer, self.CAN, CC.enabled and CS.out.cruiseState.enabled, CC.latActive,
                                                             lateral_paused, blinking_icon))
+        print('---- carcontroller.py // LFA and HDA -----')
 
       # blinkers
       if hda2 and self.CP.flags & HyundaiFlags.ENABLE_BLINKERS:
         can_sends.extend(hyundaicanfd.create_spas_messages(self.packer, self.CAN, self.frame, CC.leftBlinker, CC.rightBlinker))
+        print('---- carcontroller.py // HyundaiFlags.ENABLE_BLINKERS -----')
 
       if self.CP.openpilotLongitudinalControl:
         if hda2:
