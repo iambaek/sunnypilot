@@ -275,10 +275,13 @@ class CarState(CarStateBase):
 
     if self.CP.flags & HyundaiFlags.CANFD_HDA2:
       self.cam_0x2a4 = copy.copy(cp_cam.vl["CAM_0x2a4"])
-
+      print('---- carstate.py  //HyundaiFlags.CANFD_HDA2 -----')
+      
     if self.CP.flags & HyundaiFlags.SP_NAV_MSG:
       self._update_traffic_signals(self.CP, cp, cp_cam)
       ret.cruiseState.speedLimit = self._calculate_speed_limit() * speed_factor
+      print('---- carstate.py  //HyundaiFlags.SP_NAV_MSG -----')
+      print(f'speedLimit: {ret.cruiseState.speedLimit}')
 
     return ret
 
@@ -286,6 +289,9 @@ class CarState(CarStateBase):
     speed_limit_clu_canfd = cp if self.CP.flags & HyundaiFlags.CANFD_HDA2 else cp_cam
     self._speed_limit_clu = speed_limit_clu_canfd.vl["CLUSTER_SPEED_LIMIT"]["SPEED_LIMIT_1"] if CP.carFingerprint in CANFD_CAR else\
                             cp.vl["Navi_HU"]["SpeedLim_Nav_Clu"]
+    print('---- carstate.py // _update_traffic_signals  // ["CLUSTER_SPEED_LIMIT"]["SPEED_LIMIT_1"] -----')
+    print(f'self._speed_limit_clu: {self._speed_limit_clu}')
+
 
   def _calculate_speed_limit(self):
     return self._speed_limit_clu if self._speed_limit_clu not in (0, 255) else 0
